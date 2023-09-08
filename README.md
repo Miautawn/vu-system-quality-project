@@ -8,7 +8,7 @@ A proprietary terminal management software for "Fishing Resort".
 
 ## 
 * [Intro 📑](#intro)
-* [Dependancies 📌](#dependancies)
+* [Dependancies 📌](#dependencies)
 * [Setup ⚙️](#setup)
 
 ## Intro

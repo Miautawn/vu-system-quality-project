@@ -28,8 +28,9 @@ Below you can find the data model currently used:
 </p>
 
 ## Setup
-> Make sure you use python ^3.8!
+> Make sure you use Python ^3.8!
 
-1. Clone the repo `git clone https://github.com/Miautawn/vu-nereliacines-db.git`
-3. Install dependencies via Poetry `poetry install`
+1. Clone the repo `git clone https://github.com/Miautawn/vu-system-quality-project.git`
+2. Install dependencies via Poetry `poetry install`
+3. Setup local MongoDB instance on your machine -> [documentation](https://www.mongodb.com/docs/manual/installation/)
 4. Run the program `poetry run python src/main.py`

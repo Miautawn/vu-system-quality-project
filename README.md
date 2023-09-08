@@ -21,7 +21,7 @@ This **T**erminal **U**ser **I**nterface (TUI) provides a number of functions us
 For more info about the tool, please check the [documentation 📖](https://fishing-resort.atlassian.net/wiki/home)
 
 ## Dependencies
-This tool is built with Python 🐍 and uses the [InquirerPy](https://inquirerpy.readthedocs.io/en/latest/) for user interface + [MongoDB](https://www.mongodb.com/) for local storage.
+This tool is built with Python 🐍 and uses the [InquirerPy](https://inquirerpy.readthedocs.io/en/latest/) for user interface + [MongoDB](https://www.mongodb.com/) for local storage.  
 Below you can find the data model currently used:
 <p align="center">
   <img src="https://user-images.githubusercontent.com/24988290/197361836-3d10a1be-0fcb-4c90-a73a-32b837730849.png">

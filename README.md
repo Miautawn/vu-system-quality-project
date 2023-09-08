@@ -1,5 +1,8 @@
 # Fishing Resort Terminal Management System
-<IMAGE HERE>
+<p align="center">
+  <img src="https://github.com/Miautawn/vu-system-quality-project/assets/24988290/d19b78e1-61a3-4274-a9e2-46160a3271eb">
+</p>
+![cool-gif](https://github.com/Miautawn/vu-system-quality-project/assets/24988290/702bcfec-7c13-4c68-9f3a-ed6feeeb44c9)
 
 This is a propriatary terminal management software for "Fishing Resort"
 

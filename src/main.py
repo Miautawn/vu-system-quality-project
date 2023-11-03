@@ -12,6 +12,7 @@ ACCOMMODATION_COLLECTION = "accomodations"
 GUEST_COLLECTION = "guests"
 MAP_REDUCE_COLLECTION = "map_reduce"
 
+
 # temporary
 class Guest:
     def __init__(self, name):
@@ -38,9 +39,9 @@ class Guest:
 
 def get_occupied_rooms(client: Any):
     cursor = client.find(
-        collection = GUEST_COLLECTION,
-        search_query = {},
-        projection_query = {"keys": {"room_number": 1}}
+        collection=GUEST_COLLECTION,
+        search_query={},
+        projection_query={"keys": {"room_number": 1}},
     )
 
     occupied_rooms = []
@@ -50,48 +51,56 @@ def get_occupied_rooms(client: Any):
 
     return occupied_rooms
 
+
 def get_available_rooms(client: Any):
     occupied_rooms = get_occupied_rooms(client)
     cursor = client.find(
-        collection = ACCOMMODATION_COLLECTION,
-        search_query = {"room_number": {"$exists":True, "$nin": occupied_rooms}},
-        projection_query = {"room_number": 1},
+        collection=ACCOMMODATION_COLLECTION,
+        search_query={"room_number": {"$exists": True, "$nin": occupied_rooms}},
+        projection_query={"room_number": 1},
     )
 
     return [room["room_number"] for room in cursor]
+
 
 def get_all_rooms(client: Any):
     cursor = client.find(
-        collection = ACCOMMODATION_COLLECTION,
-        search_query = {"room_number": {"$exists":True}},
-        projection_query = {"room_number": 1},
+        collection=ACCOMMODATION_COLLECTION,
+        search_query={"room_number": {"$exists": True}},
+        projection_query={"room_number": 1},
     )
 
     return [room["room_number"] for room in cursor]
 
+
 def get_all_guests(client: Any):
     cursor = client.find(
-        collection = GUEST_COLLECTION,
-        projection_query = {"name": 1, "surname": 1}
+        collection=GUEST_COLLECTION, projection_query={"name": 1, "surname": 1}
     )
 
     return [[guest["name"], guest["surname"]] for guest in cursor]
+
 
 def view_guest_info(client: Any):
     guests = get_all_guests(client)
 
     guest_choices = [
-        Choice(value = index, name = f"{name[0]} {name[1]}") for index, name in enumerate(guests)
+        Choice(value=index, name=f"{name[0]} {name[1]}")
+        for index, name in enumerate(guests)
     ]
     guest_index = inquirer.select(
-        message = "Please select a guest:",
-        choices = guest_choices
+        message="Please select a guest:", choices=guest_choices
     ).execute()
 
-    guest_info = list(client.find(
-        collection = GUEST_COLLECTION,
-        search_query = {"name": guests[guest_index][0], "surname": guests[guest_index][1]}
-    ))[0]
+    guest_info = list(
+        client.find(
+            collection=GUEST_COLLECTION,
+            search_query={
+                "name": guests[guest_index][0],
+                "surname": guests[guest_index][1],
+            },
+        )
+    )[0]
 
     print(f"\nPrinting the info about the guest {guest_info['name']}...")
     print(f"{'name':<20}{guest_info['name']}")
@@ -100,21 +109,24 @@ def view_guest_info(client: Any):
     print(f"{'email addresss':<20}{guest_info['contacts']['email']}")
     print(f"{'occupied rooms':<20}{[key['room_number'] for key in guest_info['keys']]}")
 
+
 def view_room_info(client: Any):
     room_keys = get_all_rooms(client)
     room_key = inquirer.select(
-        message = "Please select a room:",
-        choices = room_keys
+        message="Please select a room:", choices=room_keys
     ).execute()
 
-    room_info = list(client.find(
-        collection = ACCOMMODATION_COLLECTION,
-        search_query = {"room_number": room_key}
-    ))[0]
-    room_type_info = list(client.find(
-        collection = ACCOMMODATION_COLLECTION,
-        search_query = {"type_id": room_info["type_id"]}
-    ))[0]
+    room_info = list(
+        client.find(
+            collection=ACCOMMODATION_COLLECTION, search_query={"room_number": room_key}
+        )
+    )[0]
+    room_type_info = list(
+        client.find(
+            collection=ACCOMMODATION_COLLECTION,
+            search_query={"type_id": room_info["type_id"]},
+        )
+    )[0]
 
     print(f"\nPrinting the info about the room {room_key}...")
     print(f"{'room type':<20}{room_type_info['type']}")
@@ -124,29 +136,26 @@ def view_room_info(client: Any):
     print(f"{'price of the night':<20}{room_info['price']}")
 
 
-
 def get_total_booked_room_price_with_aggregate_pipeline(client: Any):
     stage_lookup_rooms = {
         "$lookup": {
             "from": ACCOMMODATION_COLLECTION,
             "localField": "keys.room_number",
             "foreignField": "room_number",
-            "as": "joined_rooms"
+            "as": "joined_rooms",
         }
     }
-    stage_unwind_matched_rooms = {
-        "$unwind": "$joined_rooms"
-    }
+    stage_unwind_matched_rooms = {"$unwind": "$joined_rooms"}
 
     stage_group_and_sum = {
-        "$group": {
-            "_id": None,
-            "total_booking_price": {"$sum": "$joined_rooms.price"}
-        }
+        "$group": {"_id": None, "total_booking_price": {"$sum": "$joined_rooms.price"}}
     }
     pipeline = [stage_lookup_rooms, stage_unwind_matched_rooms, stage_group_and_sum]
-    result = list(client.aggregate(GUEST_COLLECTION, pipeline))[0]["total_booking_price"]
+    result = list(client.aggregate(GUEST_COLLECTION, pipeline))[0][
+        "total_booking_price"
+    ]
     return float(result)
+
 
 def main():
     hotel_db.seed_db(db_backfill_conf)
@@ -156,7 +165,7 @@ def main():
 
     db_backfill_conf = {
         ACCOMMODATION_COLLECTION: "src/data/accommodations_data.json",
-        GUEST_COLLECTION: "src/data/guest_data.json"
+        GUEST_COLLECTION: "src/data/guest_data.json",
     }
 
     hotel_db.seed_db(db_backfill_conf)
@@ -165,17 +174,22 @@ def main():
     print("\nWelcome to the Fishing Resort Hotel management console!")
     while True:
         action = inquirer.select(
-            message = "Select an action:",
-            choices = [
-                Choice(value = 0, name = "Get all the currently occupied rooms"),
-                Choice(value = 1, name = "Get all the currently available rooms"),
-                Choice(value = 2, name = "Get the total price of all occupied rooms (Aggregation Pipeline)"),
-                Choice(value = 3, name = "Get the total price of all occupied rooms (MapReduce)"),
-                Choice(value = 4, name = "View room info"),
-                Choice(value = 5, name = "View guest info"),
-            ]
+            message="Select an action:",
+            choices=[
+                Choice(value=0, name="Get all the currently occupied rooms"),
+                Choice(value=1, name="Get all the currently available rooms"),
+                Choice(
+                    value=2,
+                    name="Get the total price of all occupied rooms (Aggregation Pipeline)",
+                ),
+                Choice(
+                    value=3,
+                    name="Get the total price of all occupied rooms (MapReduce)",
+                ),
+                Choice(value=4, name="View room info"),
+                Choice(value=5, name="View guest info"),
+            ],
         ).execute()
-
 
         if action == 0:
             occupied_rooms = get_occupied_rooms(hotel_db)
@@ -191,7 +205,9 @@ def main():
                 print("There are no currently free rooms!")
 
         if action == 2:
-            total_booking_price = get_total_booked_room_price_with_aggregate_pipeline(hotel_db)
+            total_booking_price = get_total_booked_room_price_with_aggregate_pipeline(
+                hotel_db
+            )
             print("The currently occupied total price is:", total_booking_price)
 
         if action == 3:
@@ -204,15 +220,14 @@ def main():
         if action == 5:
             view_guest_info(hotel_db)
 
-        print("\n" + "-"*40)
+        print("\n" + "-" * 40)
         proceed = inquirer.confirm(
             message="Would you like to query something else?",
         ).execute()
         if not proceed:
             break
-        os.system('clear')
+        os.system("clear")
 
 
-if __name__ == "__main__":   
-  
-   main()
+if __name__ == "__main__":
+    main()

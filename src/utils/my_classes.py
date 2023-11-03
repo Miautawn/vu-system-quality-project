@@ -1,6 +1,7 @@
 # data classes are described below
 
-class Person():
+
+class Person:
     def __init__(self, name, surname, age):
         self.name = name
         self.surname = surname
@@ -25,6 +26,7 @@ class Guest(Person):
         print(self.non_existant_variable)
         return self.guest_id
 
+
 class Administrator(Person):
     def __init__(self, name, surname, age, identification_id):
         super(name, surname, age)
@@ -36,7 +38,8 @@ class Administrator(Person):
         self.username = username
         self.password = password
 
-class Room():
+
+class Room:
     def __init__(self, number, guest: Guest):
         self.number = number
         self.guest = guest
@@ -46,6 +49,4 @@ class Room():
     def setup_reservation(self, start, end):
         self.reservation_start = start
         self.reservation_end = end
-
-
-
+        print(self.test)

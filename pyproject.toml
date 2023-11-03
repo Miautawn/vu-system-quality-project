@@ -13,6 +13,7 @@ radon = "^6.0.1"
 cohesion = "^1.1.0"
 black = "^23.10.1"
 mypy = "^1.6.1"
+pyright = "^1.1.334"
 
 
 [build-system]

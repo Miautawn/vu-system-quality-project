@@ -12,6 +12,29 @@ ACCOMMODATION_COLLECTION = "accomodations"
 GUEST_COLLECTION = "guests"
 MAP_REDUCE_COLLECTION = "map_reduce"
 
+# temporary
+class Guest:
+    def __init__(self, name):
+        self.name = name
+        self.guests = []
+
+    def check_in(self, guest_name):
+        self.guests.append(guest_name)
+        print(f"{guest_name} checked into {self.name}.")
+
+    def check_out(self, guest_name):
+        if guest_name in self.guests:
+            self.guests.remove(guest_name)
+            print(f"{guest_name} checked out of {self.name}.")
+        else:
+            print(f"{guest_name} is not staying at {self.name}.")
+
+    def list_guests(self):
+        print(f"Guests currently staying at {self.name}:")
+        all_guests = []
+        for guest in self.guests:
+            print(guest)
+
 
 def get_occupied_rooms(client: Any):
     cursor = client.find(
@@ -126,7 +149,7 @@ def get_total_booked_room_price_with_aggregate_pipeline(client: Any):
     return float(result)
 
 def main():
-
+    hotel_db.seed_db(db_backfill_conf)
     # initialising DB
     hotel_db = HotelMongoDBClient(CONNECTION_STRING, DB_NAME)
     hotel_db.drop_db()

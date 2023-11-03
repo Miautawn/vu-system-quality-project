@@ -4,7 +4,7 @@ import os
 from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 
-from mongodb_utils import HotelMongoDBClient
+from utils.mongodb_utils import HotelMongoDBClient
 
 CONNECTION_STRING = "mongodb://127.0.0.1:27017/"
 DB_NAME = "fishing_resort_hotel"

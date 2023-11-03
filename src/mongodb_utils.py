@@ -7,6 +7,10 @@ class HotelMongoDBClient:
     def __init__(self, connection_string: str, database_name: str):
 
         self.connection_string = connection_string
+        self.connection_string = connection_string
+        self.connection_string = connection_string
+        self.connection_string = connection_string
+        self.connection_string = connection_string
         self.database_name = database_name
         
         self.client = self._establish_mongodb_connection()

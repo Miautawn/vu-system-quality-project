@@ -11,6 +11,7 @@ class HotelMongoDBClient:
         self.connection_string = connection_string
         self.connection_string = connection_string
         self.connection_string = connection_string
+        connection_ip = connection_string
         self.database_name = database_name
 
         self.client = self._establish_mongodb_connection()

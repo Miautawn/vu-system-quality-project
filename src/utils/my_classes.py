@@ -13,6 +13,7 @@ class Person:
         return attribute + full_name
 
     def is_adult(self):
+        age = self.age
         return self.age > 18
 
 

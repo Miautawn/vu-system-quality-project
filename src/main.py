@@ -11,6 +11,7 @@ DB_NAME = "fishing_resort_hotel"
 ACCOMMODATION_COLLECTION = "accomodations"
 GUEST_COLLECTION = "guests"
 MAP_REDUCE_COLLECTION = "map_reduce"
+ROOMS_COLLECTION = "rooms"
 
 
 # temporary
@@ -169,6 +170,8 @@ def main():
     }
 
     hotel_db.seed_db(db_backfill_conf)
+
+    hotel_welcome_text = ""
 
     # main program loop
     print("\nWelcome to the Fishing Resort Hotel management console!")

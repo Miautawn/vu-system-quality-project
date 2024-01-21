@@ -45,7 +45,8 @@ class HotelMongoDBClient:
     def insert(self, collection: str, data: Union[Dict, List]):
         if type(data) == dict:
             self.db[collection].insert_one(data)
-        self.db[collection].insert_many(data)
+        else:
+            self.db[collection].insert_many(data)
 
     def find(
         self, collection: str, search_query: dict = {}, projection_query: dict = {}

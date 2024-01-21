@@ -9,14 +9,10 @@
             },
             "keys": [
                 {
-                    "room_number": 111,
-                    "serial_number": 123,
-                    "color": "green"
+                    "room_number": 111
                 },
                 {
-                    "room_number": 222,
-                    "serial_number": 124,
-                    "color": "blue"
+                    "room_number": 222
                 }
             ]
         },
@@ -29,9 +25,7 @@
             },
             "keys": [
                 {
-                    "room_number": 333,
-                    "serial_number": 125,
-                    "color": "red"
+                    "room_number": 333
                 }
             ]
         }

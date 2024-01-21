@@ -13,6 +13,70 @@ GUEST_COLLECTION = "guests"
 MAP_REDUCE_COLLECTION = "map_reduce"
 ROOMS_COLLECTION = "rooms"
 
+def add_new_room(client: Any):
+    room_number = inquirer.text(
+        message="Please enter a new room number",
+    ).execute()
+
+    room_types = [Choice(value = idx, name = value)
+                  for idx, value in enumerate(get_all_room_types(client))]
+
+    room_type = inquirer.select(
+        message="Please select available room type", choices=room_types
+    ).execute()
+
+    room_price = inquirer.text(
+        message="Please enter a price per night:",
+    ).execute()
+
+    client.insert(ACCOMMODATION_COLLECTION,
+        {
+            "room_number": int(room_number),
+            "type_id": int(room_type),
+            "price": int(room_price)
+        }
+    )
+
+
+def add_new_guest(client: Any):
+    guest_name = inquirer.text(
+        message="Please enter guest name:",
+        #validate=validate_new_product_type,
+        #invalid_message="Invalid new product type! It must not be empty or contain numbers!"
+    ).execute()
+
+    guest_surname = inquirer.text(
+        message="Please enter guest surname:",
+    ).execute()
+
+    guest_phone_number = inquirer.text(
+        message="Please enter guest phone number:",
+    ).execute()
+
+    guest_email = inquirer.text(
+        message="Please enter guest email address:",
+    ).execute()
+
+    available_rooms = get_available_rooms(client)
+    room_key = inquirer.select(
+        message="Please select available room:", choices=available_rooms
+    ).execute()
+
+    client.insert(GUEST_COLLECTION,
+        {
+            "name": guest_name,
+            "surname": guest_surname,
+            "contacts": {
+                    "phone": guest_phone_number,
+                    "email": guest_email
+                },
+            "keys": [
+                {
+                    "room_number": room_key
+                }
+            ]
+        }
+    )
 
 def get_occupied_rooms(client: Any):
     cursor = client.find(
@@ -49,6 +113,14 @@ def get_all_rooms(client: Any):
 
     return [room["room_number"] for room in cursor]
 
+def get_all_room_types(client: Any):
+    cursor = client.find(
+        collection=ACCOMMODATION_COLLECTION,
+        search_query={"type": {"$exists": True}},
+        projection_query={"type": 1},
+    )
+
+    return [room_type["type"] for room_type in cursor]
 
 def get_all_guests(client: Any):
     cursor = client.find(
@@ -135,7 +207,6 @@ def get_total_booked_room_price_with_aggregate_pipeline(client: Any):
 
 
 def main():
-    hotel_db.seed_db(db_backfill_conf)
     # initialising DB
     hotel_db = HotelMongoDBClient(CONNECTION_STRING, DB_NAME)
     hotel_db.drop_db()
@@ -167,6 +238,8 @@ def main():
                 ),
                 Choice(value=4, name="View room info"),
                 Choice(value=5, name="View guest info"),
+                Choice(value=6, name="Add new room"),
+                Choice(value=7, name="Add new guest"),
             ],
         ).execute()
 
@@ -198,6 +271,12 @@ def main():
 
         if action == 5:
             view_guest_info(hotel_db)
+
+        if action == 6:
+            add_new_room(hotel_db)
+
+        if action == 7:
+            add_new_guest(hotel_db)
 
         print("\n" + "-" * 40)
         proceed = inquirer.confirm(

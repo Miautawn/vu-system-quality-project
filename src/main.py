@@ -5,6 +5,7 @@ from InquirerPy import inquirer
 from InquirerPy.base.control import Choice
 
 from utils.mongodb_utils import HotelMongoDBClient
+from utils.validators import validate_email, validate_phone_number, validate_room_key, validate_room_price, validate_name
 
 CONNECTION_STRING = "mongodb://127.0.0.1:27017/"
 DB_NAME = "fishing_resort_hotel"
@@ -16,6 +17,8 @@ ROOMS_COLLECTION = "rooms"
 def add_new_room(client: Any):
     room_number = inquirer.text(
         message="Please enter a new room number",
+        validate = validate_room_key,
+        invalid_message = "Incorrect room key provided, please try again..."
     ).execute()
 
     room_types = [Choice(value = idx, name = value)
@@ -27,6 +30,8 @@ def add_new_room(client: Any):
 
     room_price = inquirer.text(
         message="Please enter a price per night:",
+        validate = validate_room_price,
+        invalid_message = "Incorrect room price provided, please try again..."
     ).execute()
 
     client.insert(ACCOMMODATION_COLLECTION,
@@ -41,20 +46,26 @@ def add_new_room(client: Any):
 def add_new_guest(client: Any):
     guest_name = inquirer.text(
         message="Please enter guest name:",
-        #validate=validate_new_product_type,
-        #invalid_message="Invalid new product type! It must not be empty or contain numbers!"
+        validate=validate_name,
+        invalid_message="Invalid name provided..."
     ).execute()
 
     guest_surname = inquirer.text(
         message="Please enter guest surname:",
+        validate=validate_name,
+        invalid_message="Invalid last name provided..."
     ).execute()
 
     guest_phone_number = inquirer.text(
         message="Please enter guest phone number:",
+        validate = validate_phone_number,
+        invalid_message = "Incorrect phone number provided, please try again..."
     ).execute()
 
     guest_email = inquirer.text(
         message="Please enter guest email address:",
+        validate = validate_email,
+        invalid_message = "Incorrect email provided, please try again..."
     ).execute()
 
     available_rooms = get_available_rooms(client)

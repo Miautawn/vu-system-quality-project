@@ -31,9 +31,9 @@ def add_new_room(client: Any):
 
     client.insert(ACCOMMODATION_COLLECTION,
         {
-            "room_number": int(room_number),
-            "type_id": int(room_type),
-            "price": int(room_price)
+            "room_number": room_number,
+            "type_id": int(room_type) + 1,
+            "price": room_price
         }
     )
 

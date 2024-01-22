@@ -31,9 +31,9 @@ def add_new_room(client: Any):
 
     client.insert(ACCOMMODATION_COLLECTION,
         {
-            "room_number": room_number,
+            "room_number": int(room_number),
             "type_id": int(room_type) + 1,
-            "price": room_price
+            "price": int(room_price)
         }
     )
 
@@ -64,15 +64,15 @@ def add_new_guest(client: Any):
 
     client.insert(GUEST_COLLECTION,
         {
-            "name": guest_name,
-            "surname": guest_surname,
+            "name": str(guest_name),
+            "surname": str(guest_surname),
             "contacts": {
-                    "phone": guest_phone_number,
-                    "email": guest_email
+                    "phone": int(guest_phone_number),
+                    "email": str(guest_email)
                 },
             "keys": [
                 {
-                    "room_number": room_key
+                    "room_number": int(room_key)
                 }
             ]
         }
